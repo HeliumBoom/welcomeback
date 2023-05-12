@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.welcomeback.mapper.RegisterBeanMapper">
+
+    <resultMap type="RegisterBean" id="RegisterBeanResult">
+        <result property="registerId"    column="register_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="realName"    column="real_name"    />
+        <result property="phoneNumber"    column="phone_number"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="beginDate"    column="begin_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="path"    column="path"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectRegisterBeanVo">
+        select register_id, user_id, real_name, phone_number, dept_id, begin_date, end_date, path, status, create_by, create_time, update_by, update_time from sys_register
+    </sql>
+
+    <select id="selectRegisterBeanList" parameterType="RegisterBean" resultMap="RegisterBeanResult">
+        <include refid="selectRegisterBeanVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="realName != null  and realName != ''"> and real_name like concat('%', #{realName}, '%')</if>
+            <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number = #{phoneNumber}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="beginDate != null "> and begin_date = #{beginDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectRegisterBeanByRegisterId" parameterType="Long" resultMap="RegisterBeanResult">
+        <include refid="selectRegisterBeanVo"/>
+        where register_id = #{registerId}
+    </select>
+
+    <insert id="insertRegisterBean" parameterType="RegisterBean" useGeneratedKeys="true" keyProperty="registerId">
+        insert into sys_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="realName != null and realName != ''">real_name,</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="beginDate != null">begin_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="path != null and path != ''">path,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="realName != null and realName != ''">#{realName},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="beginDate != null">#{beginDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="path != null and path != ''">#{path},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateRegisterBean" parameterType="RegisterBean">
+        update sys_register
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="realName != null and realName != ''">real_name = #{realName},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number = #{phoneNumber},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="beginDate != null">begin_date = #{beginDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="path != null and path != ''">path = #{path},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where register_id = #{registerId}
+    </update>
+
+    <update id="registerResident" parameterType="Long">
+        update sys_register
+        set status = '1'
+        where register_id = #{registerId};
+    </update>
+
+    <delete id="deleteRegisterBeanByRegisterId" parameterType="Long">
+        delete from sys_register where register_id = #{registerId}
+    </delete>
+
+    <delete id="deleteRegisterBeanByRegisterIds" parameterType="String">
+        delete from sys_register where register_id in
+        <foreach item="registerId" collection="array" open="(" separator="," close=")">
+            #{registerId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.welcomeback.mapper.SysWebcamMapper">
+
+    <resultMap type="SysWebcam" id="SysWebcamResult">
+        <result property="monitorId"    column="monitor_id"    />
+        <result property="monitorName"    column="monitor_name"    />
+        <result property="monitorUrl"    column="monitor_url"    />
+        <result property="permissionLevel"    column="permission_level"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysWebcamVo">
+        select monitor_id, monitor_name, monitor_url, permission_level, del_flag, status, create_by, create_time, update_by, update_time, remark from sys_webcam
+    </sql>
+
+    <select id="selectSysWebcamListVo" resultMap="SysWebcamResult">
+        select monitor_id, monitor_name, monitor_url, permission_level, del_flag, status, create_by, create_time, update_by, update_time, remark from sys_webcam;
+    </select>
+
+    <select id="selectSysWebcamList" parameterType="SysWebcam" resultMap="SysWebcamResult">
+        <include refid="selectSysWebcamVo"/>
+        <where>
+            <if test="monitorName != null  and monitorName != ''"> and monitor_name like concat('%', #{monitorName}, '%')</if>
+            <if test="monitorUrl != null  and monitorUrl != ''"> and monitor_url = #{monitorUrl}</if>
+            <if test="permissionLevel != null  and permissionLevel != ''"> and permission_level = #{permissionLevel}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectSysWebcamByMonitorId" parameterType="Long" resultMap="SysWebcamResult">
+        <include refid="selectSysWebcamVo"/>
+        where monitor_id = #{monitorId}
+    </select>
+
+    <insert id="insertSysWebcam" parameterType="SysWebcam" useGeneratedKeys="true" keyProperty="monitorId">
+        insert into sys_webcam
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="monitorName != null and monitorName != ''">monitor_name,</if>
+            <if test="monitorUrl != null and monitorUrl != ''">monitor_url,</if>
+            <if test="permissionLevel != null">permission_level,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="monitorName != null and monitorName != ''">#{monitorName},</if>
+            <if test="monitorUrl != null and monitorUrl != ''">#{monitorUrl},</if>
+            <if test="permissionLevel != null">#{permissionLevel},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysWebcam" parameterType="SysWebcam">
+        update sys_webcam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="monitorName != null and monitorName != ''">monitor_name = #{monitorName},</if>
+            <if test="monitorUrl != null and monitorUrl != ''">monitor_url = #{monitorUrl},</if>
+            <if test="permissionLevel != null">permission_level = #{permissionLevel},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where monitor_id = #{monitorId}
+    </update>
+
+    <delete id="deleteSysWebcamByMonitorId" parameterType="Long">
+        delete from sys_webcam where monitor_id = #{monitorId}
+    </delete>
+
+    <delete id="deleteSysWebcamByMonitorIds" parameterType="String">
+        delete from sys_webcam where monitor_id in
+        <foreach item="monitorId" collection="array" open="(" separator="," close=")">
+            #{monitorId}
+        </foreach>
+    </delete>
+</mapper>
